@@ -32,7 +32,10 @@ ui <-fluidPage(
                    choices = list("Circle"= 1, "Triangle" = 2),
                    selected = 1),
       uiOutput("column"),
-      selectInput("Dataset", "Choose Dataset", "NUGIS"),
+      selectInput("Dataset", "Choose Dataset",
+                  c("NUGIS" = "nugis", 
+                    "FAO" = "fao", 
+                    "P.Cao" = "p.cao")),
       selectInput("Year", "Choose Year", "1990", "1987"),
       sliderInput("LegendSize", "Title Size", value = 12, min = 12, max = 50),
       hr()
