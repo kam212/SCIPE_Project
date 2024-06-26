@@ -1,8 +1,43 @@
+rm(list=ls())
 library(shiny)
 library(tidyverse)
 library(ggplot2)
 library(dplyr)
 
+load(file="/Users/katherine/Documents/r_projects/ha_state_forShny.rData")
+load(file="/Users/katherine/Documents/r_projects/crop_forShny.rData")
+load(file="/Users/katherine/Documents/r_projects/conUS_forShny.rData")
+
+source("/Users/katherine/Documents/r_projects/map_utils.R")
+source("/Users/katherine/Documents/r_projects/ts_utils.R")
+source("/Users/katherine/Documents/r_projects/bar_utils.R")
+
+fao_group <- levels(ha_state$crop_fao)
+all_years <- sort(unique(ha_state$year))
+all_states <- conUS$NAME
+
+param_tabs <- tabsetPanel(
+  id = "params",
+  type = "hidden",
+  tabPanel(
+    "map",
+    selectInput("Crop_map","Choose Crop",fao_group,fao_group[1]),
+    sliderInput("Year_map", "Choose Year", value=all_years[2], 
+                min=all_years[1],max=all_years[length(all_years)],
+                step=1)
+  ),
+  tabPanel(
+    "time",
+    selectInput("Crop_ts","Choose Crop",fao_group,fao_group[1]),
+    selectInput("State_ts","Choose State",all_states,"Maryland")
+  ),
+  tabPanel(
+    "crop",
+    selectInput("State_cr","Choose State",all_states,"Maryland"),
+    sliderInput("Year_cr", "Choose Year", value=all_years[2], 
+                min=all_years[1],max=all_years[length(all_years)])
+  )
+)
 ui <-fluidPage(
   
   titlePanel(""),
@@ -26,18 +61,25 @@ ui <-fluidPage(
       ),
       
       #Side panel, user controlled markers, size and color
-      
       textAreaInput("color", "Choose marker color in hex code", "#1ff903"),
-      radioButtons("radio", label = h5("Choose Marker Shape"),
-                   choices = list("Circle"= 1, "Triangle" = 2),
-                   selected = 1),
+      radioButtons("view", label = h5("Choose View"),
+                   choices = list("map"= "map", "time" = "time",
+                                  "crop"= "crop"),
+                   inline = TRUE,
+                   selected = "map"),
+      param_tabs,
       uiOutput("column"),
-      selectInput("Dataset", "Choose Dataset",
-                  c("NUGIS" = "nugis", 
-                    "FAO" = "fao", 
-                    "P.Cao" = "p.cao")),
-      selectInput("Year", "Choose Year", "1990", "1987"),
-      sliderInput("LegendSize", "Title Size", value = 12, min = 12, max = 50),
+      # selectInput("Dataset", "Choose Dataset",
+      #             c("NUGIS" = "nugis",
+      #               "FAO" = "fao",
+      #               "P.Cao" = "p.cao")),
+      #selectInput("Crop","Choose Crop",fao_group,fao_group[1]),
+      #selectInput("State","Choose State",all_states,"Maryland"),
+      #sliderInput("Year", "Choose Year", value=all_years[2], 
+      #            min=all_years[1],max=all_years[length(all_years)]),
+      selectInput("CropDef", "Choose Crop Definitions", 
+                  c("Crop Definitions" = "cropdef",
+                    "No Crop Definitions" = "nocropdef")),
       hr()
       
       
@@ -58,6 +100,11 @@ ui <-fluidPage(
 )
 
 server <- function(input, output, session) {
+  
+  ## update user interface
+  observeEvent(input$view,{
+    updateTabsetPanel(inputId = "params",selected = input$view)
+  })
   
   newData <- reactive({
     infile <- input$file1
@@ -93,75 +140,38 @@ server <- function(input, output, session) {
       state
     }
   })
-  output$contents = renderTable({
-    df <- newData()
-    return(df)
-  })
+  
  
-  output$stateMap <- renderPlot({
-    df <- newData
-    
-    #Preset map of United States
+  mapobj <- reactive({
+    switch(input$params,
+           map=map.helper(input$Year_map,input$Crop_map,
+                          data=ha_state,
+                          meta=crop,
+                          shape=conUS),
+           time=ts.helper(input$State_ts,input$Crop_ts,
+                          data = ha_state,
+                          meta=crop,
+                          shape=conUS,
+                          all_years = all_years),
+           crop=bar.helper(input$State_cr,input$Year_cr,
+                           data = ha_state,
+                           meta=crop,
+                           shape=conUS))
+  })
+  selectInput$CropDef <- renderUI()
+  input$CropDef <- read_file("/Users/katherine/Documents/Meta.png")
+})
     
   
-    #Downloader, png type file
-    
-    rm(list=ls())
-   
-    #Presenting Bar Graph Data 
-    
-    ## load cropland area data
-    load(file="/Users/katherine/Documents/ha_state.rData")
-    
-    ## load cross-walk data
-    library(readxl)
-    crop0 <- as.data.frame(read_xlsx("/Users/katherine/Documents/us_cropgrids.xlsx",
-                                     sheet = "us_cropgrids"))
-    
-    ## remove duplicates
-    crop1 <- subset(crop0,TOTAL==2&DUPLICATE==2)
-    
-    ## remove undefined FAO group
-    crop <- subset(crop1,!is.na(FAO_GROUP))
-    
-    ha1 <- merge(
-      ha_state_df,
-      crop[,c("crop_id","FAO_GROUP","Temporrary/Permanent")],
-      by="crop_id")
-    
-    
-    load(file="/Users/katherine/Documents/conUS.rData")
-    library(ggplot2)
-    ## map for a given year and crop
-    df_ <- subset(ha1,year==2000&crop_id==1)
-    
-    df2_ <- merge(df_,crop1[,1:4],by="crop_id")
-    title_ <- with(df2_,paste(commodity_desc,class_desc,util_practice_desc,FAO_GROUP))
-    shp_ <- merge(conUS,df_,by.x="STATEFP",by.y="state_fips_code")
-    range(df_$kHA)
-    ggplot(data=shp_)+geom_sf(aes(fill=kHA))+
-      ggtitle(title_)+
-      guides(fill=guide_legend(title="HA(x1,000)"))
-    
-    ## time series
-    ## for a given state and crop
-    df_ <- subset(ha1,state_fips_code=="01"&crop_id==3)
-    df2_ <- merge(df_,crop1[,1:4],by="crop_id")
-    title_ <- with(df2_,paste(commodity_desc,class_desc,util_practice_desc,FAO_GROUP))
-    ggplot(data=df2_,aes(x=year,y=kHA))+geom_line()+
-      ggtitle(title_)+ylab("HA (x1,000)")
-    
-    ## bar plots
-    ## for a given state and year, over crop groups
-    df_ <- subset(ha1,state_fips_code=="01"&year==2000)
-    df2_ <- aggregate(kHA~FAO_GROUP,data=df_,FUN=sum)
-    ggplot(data=df2_,
-           aes(x=reorder(FAO_GROUP,-kHA),y=kHA))+
-      geom_bar(stat="identity")+
-      coord_flip()+xlab("FAO Group")+ylab("HA(x1,000)")
-
-    
+  output$stateMap <- renderPlot({
+    mapobj()$value
   })
+  
+  output$contents = renderTable({
+    mapobj()$meta
+  })
+  
+  
   output$downloadPlot <- downloadHandler(
     filename = function() {pastel('map-', Sys.Date(), 'png', sep= '')},
     content = function(file) {
