@@ -25,7 +25,7 @@ categoricals <- {c("none" = "none", "year" = "year", "female-headed household " 
 
 
 continuous <- {c("total farm area measure, ha - GPS-based if available, farmer-report if not " = "farmsize_ha_" ,  "crop area planted, by household " = "arpl_crop_" ,  
-                 "crop area harvested, by household " = "arhv_crop_" , "crop quantity harvested, by household " = "harv_quant_kg_" , 
+                 "crop area harvested, by  " = "arhv_crop_" , "crop quantity harvested, by household " = "harv_quant_kg_" , 
                  "crop yield by area harvested kg/ha (GPS) (harv_quant/area_harvested_ha)  " = "yield_arhv_ha_" ,  " crop yield by area planted kg/ha (GPS) (harv_quant/area_planted_ha)" = "yield_arpl_ha_" , 
                  "change in crop yield by area harvested from 2008-2010 " = "yield_change_arhv_2008_2010" ,  "change in crop yield by area harvested from 2010-2012 " = "yield_change_arhv_2010_2012" ,  
                  "change in crop yield by area planted from 2008-2010 " = "yield_change_arpl_2008_2010" , "change in crop yield by area planted from 2010-2012 " = "yield_change_arpl_2010_2012" ,
@@ -39,10 +39,10 @@ continuous <- {c("total farm area measure, ha - GPS-based if available, farmer-r
                  "change in land allocation to crop, 2010-2012 " = "alloc_change_crop_2010_2012" ,  
                  "change in land allocation to annual crops besides crop, 2010-2012 " = "alloc_change_otherann_2010_2012" ,  "change in land allocation to permanent/fruit crops, 2010-2012 " = "alloc_change_perm_2010_2012" ,  
                  "change in land allocation to crop, 2008-2010 " = "alloc_change_crop_2008_2010" ,  "change in land allocation to annual crops besides crop, 2008-2010 " = "alloc_change_otherann_2008_2010" ,  
-                 "change in land allocation to permanent/fruit crops, 2008-2010 " = "alloc_change_perm_2008_2010"   
+                 "change in land allocation to permanent/temp crops, 2008-2010 " = "alloc_change_perm_2008_2010"   
 )}
 
-allvarlist <- {c("none" = "none", "year" = "year", " " = "female_hoh_" , "household sold crop " = "sold_crop_" , 
+allvarlist <- {c("none" = "none", "year" = "year", " " = "" , "household sold crop " = "sold_crop_" , 
                  "farm size category, <=2 ha (1), >2-4 ha (2), >4-10 ha (3), >10 ha (4)" = "smallholder_cat_" ,  
                  "household grew any fruit crops " = "grew_fruit_" ,  "household grew any permanent crops " = "grew_perm_" ,  "household grew annual crops " = "grew_annual_" ,  
                  "household increased crop yield between 2008 and 2010 " = "crop_increaser_2008_2010" ,   "household irrigated any plot " = "plot_irrigated_" ,  
