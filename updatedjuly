@@ -58,12 +58,12 @@ allvarlist <- {c("none" = "none", "year" = "year", " " = "female_hoh_" , "househ
                  "total number of household labor days on farm " = "tot_hh_labor_days_" ,  "total number of hired labor days " = "tot_hired_labor_days_" ,  "quantity of crop sold, kg " = "quant_sold_" ,  
                  "crop price clustered median (smallest geo unit w/ >=10 price values) " = "shadowpricecluster_lrs_" ,
                  "number of household members " = "hh_size_" ,  "distance to nearest trunk road (as defined by TANROADS) (geovars) " = "dist_road_" ,  
-                 "distance to nearest major market (FEWSNET key market centers) (geovars) " = "dist_market_" ,  "age of head of household " = "age_hoh_" ,  "years of education completed by the household head " = "educ_yrs_hoh_" ,  
+                 "distance to nearest major market (FEWSNET key market centers) (geovars) " = "dist_market_" ,  " " = "age_hoh_" ,  "d " = "educ_yrs_hoh_" ,  
                  
-                 "total land allocation to annual crops besides crop " = "alloc_otherann_" ,  "total land allocation to permanent/fruit crops " = "alloc_perm_" ,  
+                 "total land allocation to annual crops besides crop " = "alloc_otherann_" ,  "total land  " = "alloc_perm_" ,  
                  "change in land allocation to crop, 2010-2012 " = "alloc_change_crop_2010_2012" ,  
                  "change in land allocation to annual crops besides crop, 2010-2012 " = "alloc_change_otherann_2010_2012" ,  "change in land allocation to permanent/fruit crops, 2010-2012 " = "alloc_change_perm_2010_2012" ,  
-                 "change in land allocation to crop, 2008-2010 " = "alloc_change_crop_2008_2010" ,  "change in land allocation to annual crops besides crop, 2008-2010 " = "alloc_change_otherann_2008_2010" ,  
+                 "change in land allocation to crop, 2008-2010 " = "alloc_change_crop_2008_2010" ,  "annual crops besides crop, 2008-2010 " = "alloc_change_otherann_2008_2010" ,  
                  "change in land allocation to permanent/fruit crops, 2008-2010 " = "alloc_change_perm_2008_2010")}
 
 #this is a version with no "none" option
