@@ -17,11 +17,11 @@
 
 #variable lists: matching names with labels. If you skip this step, your variable names will appear as-is in the dropdowns. 
 categoricals <- {c("none" = "none", "year" = "year", "female-headed household " = "female_hoh_" , "household sold crop " = "sold_crop_" , 
-                   "farm size category, <=2 ha (1), >2-4 ha (2), >4-10 ha (3), >10 ha (4)" = "smallholder_cat_" ,  
-                   "household grew any fruit crops " = "grew_fruit_" ,  "household grew any permanent crops " = "grew_perm_" ,  "household grew annual crops " = "grew_annual_" ,  
-                   "household increased crop yield between 2008 and 2010 " = "crop_increaser_2008_2010" , "household irrigated any plot " = "plot_irrigated_" ,  
-                   "household used organic fertilizer on any plot " = "org_fert_" ,  "household used inorganic fertilizer on any plot " = "inorg_fert_" ,  
-                   "household used pesticides or herbicides on any plot " = "pest_herb_usage_" ,  "household had any intercropped plot, any crop " = "landuse_ic_ap_") }
+                   "land size, <=2 ha (1), >2-4 ha (2), >4-10 ha (3), >10 ha (4)" = "smallholder_cat_" ,  
+                   "crop type " = "" ,  
+                   "2008 and 2010 " = "crop_increaser_2008_2010" , "" = "plot_year" ,  
+                   "fertilizer  " = "org_fert_" ,  "household used inorganic fertilizer on any plot " = "inorg_fert_" ,  
+                   "state " = "" ,  "h " = "landuse_ic_ap_") }
 
 
 continuous <- {c("total farm area measure, ha - GPS-based if available, farmer-report if not " = "farmsize_ha_" ,  "crop area planted, by household " = "arpl_crop_" ,  
